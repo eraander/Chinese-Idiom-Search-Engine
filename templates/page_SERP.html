@@ -1,0 +1,293 @@
+<!doctype html>
+<html>
+<body bgcolor="white">
+<title>Search Results</title>
+<style>
+.sansserif {
+    padding: 14px;
+    font-family: "Times New Roman", Times, sans-serif;
+    font-weight: bold;
+}
+p.results {
+    color:grey;
+    line-height:20px;
+    height:60px;
+    overflow:hidden;
+    font-size:14px
+}
+p.cannotfind {
+    background-color:pink;
+    text-align:center;
+    border-left: 6px solid red;
+}
+p.warningMsg {
+    background-color: coral;
+    text-align:center;
+    border-left: 6px solid orange;
+}
+.header {
+    background-color:black;
+    color:lightgrey;
+}
+.searchbox {
+    position:fixed;
+    top:0;
+    width:100%;
+    float:left;
+    background-color:white;
+    border-bottom: 2px dotted black;
+}
+.contents{
+    margin-top:350px;
+    padding:0;
+    clear:left;
+}
+
+.tooltip {
+    padding: 0;
+    display: inline-block;
+    border-bottom: 1px dotted darkgrey;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: darkgrey;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible
+}
+</style>
+
+<div class="searchbox">
+<h3 class="header"> Chengyu (Chinese Idiom) Search </h3>
+<form action="/results" name="search" method="post">
+<dl>
+{#    <dd><textarea rows="3" cols="150"  name="query">{{queries['text']}}</textarea>#}
+
+     <p>General Query Search:</p>
+        <dd><textarea rows="3" cols="150" name="name">{{queries['name']}}</textarea>
+        <dd>Search Pinyin: <input type="text" style="width:300px" name="pinyin" value="{{queries['pinyin']}}"></dd>
+        <dd>Select Zodiac Sign:
+        <select name="zodiac" method="GET" action="/">
+           {% for zod, en in zodiac.items(): %}
+            {% if en == queries['zodiac']: %}
+                <option value="{{en}}" SELECTED>{{en}}/{{zod}}</option>
+            {% else: %}
+                <option value="{{en}}">{{en}}/{{zod}}</option>
+            {% endif %}
+           {% endfor %}
+        </select>
+        <dd>Select Sentiment:
+        <select name="sentiment" method="GET" action="/">
+           {% for sent, ch in sentiment.items(): %}
+            {% if sent == queries['sentiment']: %}
+                <option value="{{sent}}" SELECTED>{{sent}}/{{ch}}</option>
+            {% else: %}
+                <option value="{{sent}}">{{sent}}/{{ch}}</option>
+            {% endif %}
+           {% endfor %}
+        </select>
+        <dd>Select Difficulty:
+        <select name="difficulty" method="GET" action="/">
+           {% for diff, ch in difficulty.items(): %}
+            {% if diff == queries['difficulty']: %}
+                <option value="{{diff}}" SELECTED>{{diff}}/{{ch}}</option>
+            {% else: %}
+                <option value="{{diff}}">{{diff}}/{{ch}}</option>
+            {% endif %}
+           {% endfor %}
+        </select>
+        <dd>Select Character Number:
+        <select name="char_num" method="GET" action="/">
+           {% for char in char_num: %}
+            {% if char == queries['char_num']: %}
+                <dd>boys will be boys</dd>
+                <option value="{{char}}" SELECTED>{{char}}</option>
+            {% else: %}
+                <option value="{{char}}">{{char}}</option>
+            {% endif %}
+           {% endfor %}
+        </select>
+
+
+{#    <dd>Search in starring: <input type="text" style="width:300px" name="starring" value="{{queries['star']}}"> Search in director: <input type="text" style="width:300px" name="director" value="{{queries['direct']}}">#}
+{#    <dd>Search in director: <input type="text" style="width:300px" name="director" value="{{queries['direct']}}">#}
+{#    <dd>Search in language: <input type="text" style="width:300px" name="language" value="{{queries['lang']}}"> Search in country: <input type="text" style="width:300px" name="country" value="{{queries['country']}}">#}
+{#    <dd>Search in country: <input type="text" style="width:300px" name="country" value="{{queries['country']}}">#}
+{#    <dd>Search in location: <input type="text" style="width:300px" name="location" value="{{queries['locat']}}"> Search in time: <input type="text" style="width:300px" name="time" value="{{queries['time']}}">#}
+{#    <dd>Search in time: <input type="text" style="width:300px" name="time" value="{{queries['time']}}">#}
+{#    <dd>Search in categories: <input type="text" style="width:300px" name="categories" value="{{queries['cat']}}">#}
+{#    <dd>Runtime: min <input type="text" name="mintime" value={{queries['mintime']}}> max <input type="text" name="maxtime" value={{queries['maxtime']}}>#}
+    <dd><input type="submit" value="Search">
+</dl>
+</form>
+<p style="font-size:14px">Found {{res_num}} results. Showing {{ 1+(page_num-1)*10 }} - {% if (10+(page_num-1)*10) > res_num %}{{res_num}}{% else %}{{ 10+(page_num-1)*10 }}{% endif %}</p>
+{% if page_num > 1 %}
+    <form action="/results/{{page_num-1}}" name="previouspage" method="get">
+    <input style="width:60px;float:left;clear:right" type="submit" value="Previous">
+    </form>
+{% endif %}
+{% if ((res_num/10)|round(0,'ceil')) > page_num %}
+    <form action="/results/{{page_num + 1}}" name="nextpage" method="get">
+    <input style="width:60px;float:left" type="submit" value="Next">
+    </form>
+{% endif %}
+
+</div>
+
+<div class="contents">
+<p>
+    {% if stop_len %}
+        Ignoring term:
+        {% for stop in stops %}
+            {{ stop }}
+        {% endfor %}
+    {% endif%}
+</p>
+<p>
+    {% if warning %}
+        <p  class="warningMsg">Warning: {{warning[0]}}</p>
+    {% endif%}
+</p>
+    {% if res_num %}
+        {% for res in results %}
+        <ul>
+            <pre class="sansserif"><a href="/documents/{{res}}" target="_blank">  {{ results[res]['name']|safe }} </a>    score: {{results[res]['score']}} </pre>
+            <dd class="results">{{results[res]['pinyin'] | safe}}</dd>
+            {% if results[res]['english']: %}
+            <br><strong>english: </strong>
+            {% endif %}
+            <span class="results">{{ results[res]['english'] | safe }}</span>
+            <br><strong>sentiment: </strong><span class="results">{{ results[res]['sentiment'] | safe }}</span>
+            <br><strong>difficulty: </strong><span class="results">{{ results[res]['difficulty'] | safe }}</span>
+            {% if results[res]['zodiac']: %}
+            <br><strong>zodiac signs: </strong>
+            <span class="results">{{ results[res]['zodiac'] | safe}} </span>
+            {% endif %}
+            {% if results[res]['desc_sentence_code']: %}
+            <br><strong>description: </strong>
+            {% endif %}
+            {% for index, translation in results[res]['desc_sentence_code'].items(): %}
+                    <span class="tooltip">
+                        {% if index not in results[res]['translation_hits']: %}
+                            {{results[res]['desc_segmentation'][index] | safe}}
+                            <span class="tooltiptext">
+                            <ol>
+                            {% for t in translation: %}
+                                <li>{{t}}</li>
+                            {% endfor %}
+                            </ol>
+                        </span>
+                        {% else %}
+                            <mark>{{results[res]['desc_segmentation'][index] | safe}}</mark>
+                            <span class="tooltiptext">
+                            <ol>
+                                {% for t in translation: %}
+                                <li>{{t}}</li>
+                                {% endfor %}
+                            </ol>
+                            </span>
+                        {% endif %}
+
+                </span>
+            {% endfor %}
+            {% if results[res]['source_sentence_code']: %}
+            <br><strong>source: </strong>
+            {% endif %}
+            {% for index, translation in results[res]['source_sentence_code'].items(): %}
+                    <span class="tooltip">
+                        {% if index not in results[res]['source_translation_hits']: %}
+                            {{results[res]['source_segmentation'][index] | safe}}
+                            <span class="tooltiptext">
+                            <ol>
+                            {% for t in translation: %}
+                                <li>{{t}}</li>
+                            {% endfor %}
+                            </ol>
+                        </span>
+                        {% else %}
+                            <mark>{{results[res]['source_segmentation'][index] | safe}}</mark>
+                            <span class="tooltiptext">
+                            <ol>
+                                {% for t in translation: %}
+                                <li>{{t}}</li>
+                                {% endfor %}
+                            </ol>
+                            </span>
+                        {% endif %}
+
+                </span>
+            {% endfor %}
+            {% if results[res]['story_sentence_code']: %}
+            <br><strong>story: </strong>
+            {% endif %}
+            {% for index, translation in results[res]['story_sentence_code'].items(): %}
+                    <span class="tooltip">
+                        {% if index not in results[res]['story_translation_hits']: %}
+                            {{results[res]['story_segmentation'][index] | safe}}
+                            <span class="tooltiptext">
+                            <ol>
+                            {% for t in translation: %}
+                                <li>{{t}}</li>
+                            {% endfor %}
+                            </ol>
+                        </span>
+                        {% else %}
+                            <mark>{{results[res]['story_segmentation'][index] | safe}}</mark>
+                            <span class="tooltiptext">
+                            <ol>
+                                {% for t in translation: %}
+                                <li>{{t}}</li>
+                                {% endfor %}
+                            </ol>
+                            </span>
+                        {% endif %}
+
+                </span>
+            {% endfor %}
+            {% if results[res]['usage_sentence_code']: %}
+            <br><strong>usage: </strong>
+            {% endif %}
+            {% for index, translation in results[res]['usage_sentence_code'].items(): %}
+                    <span class="tooltip">
+                        {% if index not in results[res]['usage_translation_hits']: %}
+                            {{results[res]['usage_segmentation'][index] | safe}}
+                            <span class="tooltiptext">
+                            <ol>
+                            {% for t in translation: %}
+                                <li>{{t}}</li>
+                            {% endfor %}
+                            </ol>
+                        </span>
+                        {% else %}
+                            <mark>{{results[res]['usage_segmentation'][index] | safe}}</mark>
+                            <span class="tooltiptext">
+                            <ol>
+                                {% for t in translation: %}
+                                <li>{{t}}</li>
+                                {% endfor %}
+                            </ol>
+                            </span>
+                        {% endif %}
+
+                </span>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    {% else %}
+        {% for res in results %}
+            <p class="cannotfind">{{res[0]}}</p>
+        {% endfor %}
+    {% endif %}
+</div>
+</body>
+</html>

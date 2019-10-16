@@ -1,0 +1,93 @@
+<!doctype html>
+<style>
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted darkgrey;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: darkgrey;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible
+}
+</style>
+
+<body bgcolor="white">
+
+<h3>{{name|safe}}</h3>
+<div class="chengyu" style="word-wrap:break-word; padding:10px;">
+    {% for term in idiom %}
+        {% if term == 'desc_segmentation': %}
+            <pre style="white-space: pre-wrap;"><strong>description: </strong>: </pre>
+            {% for index, transl in translation['desc_sentence_code'].items(): %}
+                <span class="tooltip">{{translation['desc_segmentation'][index] | safe}}
+                    <span class="tooltiptext">
+                        <ol>
+                        {% for t in transl: %}
+                            <li>{{t}}</li>
+                        {% endfor %}
+                        </ol>
+                    </span>
+                </span>
+            {% endfor %}
+        {% elif term == 'source_segmentation': %}
+            <pre style="white-space: pre-wrap;"><strong>source: </strong>: </pre>
+            {% for index, transl in translation['source_sentence_code'].items(): %}
+                <span class="tooltip">{{translation['source_segmentation'][index] | safe}}
+                    <span class="tooltiptext">
+                        <ol>
+                        {% for t in transl: %}
+                            <li>{{t}}</li>
+                        {% endfor %}
+                        </ol>
+                    </span>
+                </span>
+            {% endfor %}
+        {% elif term == 'story_segmentation': %}
+            <pre style="white-space: pre-wrap;"><strong>story: </strong>: </pre>
+            {% for index, transl in translation['story_sentence_code'].items(): %}
+                <span class="tooltip">{{translation['story_segmentation'][index] | safe}}
+                    <span class="tooltiptext">
+                        <ol>
+                        {% for t in transl: %}
+                            <li>{{t}}</li>
+                        {% endfor %}
+                        </ol>
+                    </span>
+                </span>
+            {% endfor %}
+        {% elif term == 'usage_segmentation': %}
+            <pre style="white-space: pre-wrap;"><strong>usage: </strong>: </pre>
+            {% for index, transl in translation['usage_sentence_code'].items(): %}
+                <span class="tooltip">{{translation['usage_segmentation'][index] | safe}}
+                    <span class="tooltiptext">
+                        <ol>
+                        {% for t in transl: %}
+                            <li>{{t}}</li>
+                        {% endfor %}
+                        </ol>
+                    </span>
+                </span>
+            {% endfor %}
+        {% else: %}
+            <pre style="white-space: pre-wrap;"><strong>{{term}}</strong>: {{idiom[term] | safe}}</pre>
+        {% endif %}
+    {% endfor %}
+</div>
+
+</body>

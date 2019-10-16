@@ -1,0 +1,112 @@
+<!doctype html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Chinese Idioms Search</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="jumbotron row">
+        <h1>Chinese Idioms Search</h1>
+    </div>
+    <p class="row">You can input any query to find the matching Chinese Idioms.</p>
+
+
+    <form method="POST" action="/results" role="form" class="form-horizontal">
+
+    <div class="form-group row">
+            <div  class="col-xs-6">
+            <label class="text-uppercase">general query search</label>
+            <input type="text" name="name" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <label class="text-uppercase">pinyin</label>
+            <input type="text" name="pinyin" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+        </div>
+    </div>
+        <br>
+    <dl>
+    <div class="row">
+        <dd>Select Zodiac Sign:
+        <select name="zodiac" method="GET" action="/">
+           {% for zod, en in zodiac.items(): %}
+            {% if en == '' %}
+                <option value="{{en}}" SELECTED>{{en}}/{{zod}}</option>
+            {% else %}
+                <option value="{{en}}">{{en}}/{{zod}}</option>
+            {% endif %}
+           {% endfor %}
+        </select>
+    </div>
+    <div class="row">
+        <dd>Select Sentiment:
+        <select name="sentiment" method="GET" action="/">
+           {% for sent, ch in sentiment.items(): %}
+            {% if sent == '' %}
+                <option value="{{sent}}" SELECTED>{{sent}}/{{ch}}</option>
+            {% else %}
+                <option value="{{sent}}">{{sent}}/{{ch}}</option>
+            {% endif %}
+           {% endfor %}
+        </select>
+    </div>
+    <div class="row">
+        <dd>Select Difficulty:
+        <select name="difficulty" method="GET" action="/">
+           {% for diff, ch in difficulty.items(): %}
+            {% if diff == '' %}
+                <option value="{{diff}}" SELECTED>{{diff}}/{{ch}}</option>
+            {% else %}
+                <option value="{{diff}}">{{diff}}/{{ch}}</option>
+            {% endif %}
+           {% endfor %}
+        </select>
+    </div>
+    <div class="row">
+        <dd>Select Character Number:
+        <select name="char_num" method="GET" action="/">
+           {% for char in char_num: %}
+            {% if char == '' %}
+                <option value="{{char}}" SELECTED>{{char}}</option>
+            {% else %}
+                <option value="{{char}}">{{char}}</option>
+            {% endif %}
+           {% endfor %}
+        </select>
+        <br>
+    </div>
+    <div class="row">
+        <dd><input type="submit" value="Search">
+    </div>
+    </dl>
+
+</form>
+</div>
+</body>
+
+    </form>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+</html>
