@@ -31,13 +31,9 @@ version 3.9.2 from the Stanford website: <u>https://stanfordnlp.github.io/CoreNL
  
 Then, run the coreNLP server with the following command (make sure to be in the directory 
 corresponding to the coreNLP package you downloaded):  
-java -mx3g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -props 
-StanfordCoreNLP-chinese.properties -file chinese.txt -outputFormat text 
+java -mx3g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -props StanfordCoreNLP-chinese.properties -file chinese.txt -outputFormat text 
  
-java -Xmx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer \ 
-\> -serverProperties StanfordCoreNLP-chinese.properties \ 
-\> -preload tokenize,ssplit,pos,lemma,ner,parse \ 
-\> -status_port 9001  -port 9001 -timeout 15000 
+java -Xmx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -serverProperties StanfordCoreNLP-chinese.properties -preload tokenize,ssplit,pos,lemma,ner,parse -status_port 9001  -port 9001 -timeout 15000 
  
 Then, run the elasticsearch server, making sure to be in the directory where you downloaded 
 elasticsearch to: 
