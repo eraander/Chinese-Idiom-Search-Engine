@@ -1,7 +1,7 @@
 # Chinese-Idiom-Search-Engine
 
 ### Overview ###
-This project is a search engine for Chinese idioms and proverbs (mainly including the 4-character 成语 [chéngyǔ], 俗语 [súyǔ] and longer, more proverb-like 歇后语 [xiēhòuyǔ]).
+This project is a search engine for Chinese idioms and proverbs (mainly including the 4-character 成语 [chéngyǔ], the vernacular 俗语 [súyǔ] and the longer, allegorical 歇后语 [xiēhòuyǔ]).
 
 ### Authors ###
 This project was created by Jin Zhao, Kun Li, Xiaojing Yan, and Erik Andersen.
@@ -35,9 +35,9 @@ java -mx3g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -props
 StanfordCoreNLP-chinese.properties -file chinese.txt -outputFormat text 
  
 java -Xmx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer \ 
-> -serverProperties StanfordCoreNLP-chinese.properties \ 
-> -preload tokenize,ssplit,pos,lemma,ner,parse \ 
-> -status_port 9001  -port 9001 -timeout 15000 
+\> -serverProperties StanfordCoreNLP-chinese.properties \ 
+\> -preload tokenize,ssplit,pos,lemma,ner,parse \ 
+\> -status_port 9001  -port 9001 -timeout 15000 
  
 Then, run the elasticsearch server, making sure to be in the directory where you downloaded 
 elasticsearch to: 
